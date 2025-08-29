@@ -1,4 +1,4 @@
-             //Heart//
+//Hearts//
 
 const heartCount = document.getElementById("heart")
 
@@ -10,10 +10,12 @@ for (let i = 0; i < hearts.length; i++) {
     })
 }
 
-             //Copy//
+
+
+//Copy//
 
 const copyCount = document.getElementById("copy-count")
-const copyButtons = document.getElementsByClassName("btn-copy")
+const copyButtons = document.getElementsByClassName("copy-btn")
 
 for (let i = 0; i < copyButtons.length; i++) {
     copyButtons[i].addEventListener("click", function () {
@@ -21,21 +23,82 @@ for (let i = 0; i < copyButtons.length; i++) {
     })
 }
 
-             //Coin//
 
-const coins = document.getElementById("coin")
-const callButtons = document.getElementsByClassName("btn-call")
 
-for (let i = 0; i < callButtons.length; i++){
-    callButtons[i].addEventListener("click", function(){
-        let currentCoin = parseInt(coins.innerText)
+//coin//
 
-        if (currentCoin >= 20){
-            coins.innerText = currentCoin - 20
-        }
-        else{
-            coins.innerText = 0
-            alert("Not enough coins!")
-        }
-    })
+
+
+const coins = document.getElementById("coin");
+const callButtons = document.getElementsByClassName("call-btn");
+const historyList = document.getElementById("history-list");
+const clearBtn = document.getElementById("clear-history");
+
+function getCurrentTime() {
+    const now = new Date();
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+    let seconds = now.getSeconds();
+    if (minutes < 10) minutes = '0' + minutes;
+    if (seconds < 10) seconds = '0' + seconds;
+
+    return hours + ":" + minutes + ":" + seconds;
 }
+
+for (let i = 0; i < callButtons.length; i++) {
+    callButtons[i].addEventListener("click", function () {
+        const card = this.parentElement.parentElement;
+        const service = card.querySelector("h3").innerText;
+        const number = card.querySelector("h1").innerText;
+
+        alert("Calling " + service + " " + number);
+
+        let currentCoin = parseInt(coins.innerText);
+        if (currentCoin >= 20) {
+            coins.innerText = currentCoin - 20;
+        } else {
+            coins.innerText = 0;
+            alert("Not enough coins!");
+            return; 
+        }
+
+        // History entry div 
+        const entry = document.createElement("div");
+        entry.classList.add("history-entry", "p-3","mb-3","rounded-lg","text-xl","font-semibold" ,"bg-[#F5FFF6]", "flex", "justify-between", "items-center");
+
+        
+        const leftDiv = document.createElement("div");
+        leftDiv.classList.add("flex", "flex-col");
+
+        
+        const serviceEl = document.createElement("div");
+        serviceEl.innerText = service;
+        serviceEl.classList.add("font-bold");
+
+       
+        const numberEl = document.createElement("div");
+        numberEl.innerText = number;
+      
+       
+        leftDiv.appendChild(serviceEl);
+        leftDiv.appendChild(numberEl);
+
+       
+        const timeEl = document.createElement("div");
+        timeEl.innerText = getCurrentTime();
+       
+
+       
+        entry.appendChild(leftDiv);
+        entry.appendChild(timeEl);
+
+        
+        historyList.prepend(entry);
+
+    });
+}
+
+// Clear history
+clearBtn.addEventListener("click", function () {
+    historyList.innerHTML = "";
+});
